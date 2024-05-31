@@ -1,0 +1,6 @@
+#outlined-canvas {
+  background-color: #fff;
+
+  /* Prevents blur issues when using the canvas draw API's */
+  image-rendering: pixelated;
+}
