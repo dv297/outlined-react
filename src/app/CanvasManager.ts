@@ -10,6 +10,7 @@ class CanvasManager {
   __width: number;
 
   constructor(elementSelector: string) {
+    console.log("vuuu 001");
     const canvas = document.querySelector<HTMLCanvasElement>(elementSelector);
 
     if (!canvas) {
