@@ -1,14 +1,12 @@
 import "./styles/style.css";
 
+import PubSub from "pubsub-js";
 import CanvasManager from "@src/app/CanvasManager.ts";
-import ShortcutManager from "@src/app/ShortcutManager.ts";
 import ArchitectureElementIcon from "@src/drawables/ArchitectureElementIcon.ts";
 import BaseDrawable from "@src/drawables/BaseDrawable.ts";
 
 function initialize() {
   const canvasManager = CanvasManager.getInstance();
-  console.log("vuuu - 1");
-  const shortcutManager = new ShortcutManager();
 
   const x = 0;
   const y = 100;
@@ -35,7 +33,10 @@ function initialize() {
     });
   }
 
-  draw();
+  PubSub.subscribe("DRAW", (message, data) => {
+    console.log(message, data);
+    draw();
+  });
 }
 
 export default initialize;
