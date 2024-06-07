@@ -1,32 +1,12 @@
-#top-controls-panel {
-  position: absolute;
-  top: 25px;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#top-controls-container {
-  width: 100%;
-  max-width: 600px;
-  height: 40px;
-  background-color: rgb(194, 194, 194);
-  border-radius: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-  outline: solid 1px #aaa;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 #outlined-canvas {
   position: absolute;
   top: 0;
   left: 0;
-  background-color: #fff;
-
+  @apply bg-gray-100;
   /* Prevents blur issues when using the canvas draw API's */
   image-rendering: pixelated;
 }

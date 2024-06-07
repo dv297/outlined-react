@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import initialize from "@src/main.ts";
-import TopPanel from "@src/components/TopPanel.tsx";
+import TopPanel from "@src/components/TopPanel/TopPanel.tsx";
 
 function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -14,7 +14,7 @@ function App() {
   }, []);
 
   return (
-    <div>
+    <div className="h-screen w-screen">
       <canvas id="outlined-canvas" ref={canvasRef} />
       <TopPanel />
     </div>
