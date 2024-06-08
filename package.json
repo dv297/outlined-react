@@ -20,9 +20,14 @@
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "@headlessui/react": "^2.0.4",
+    "@tailwindcss/forms": "^0.5.7",
+    "clsx": "^2.1.1",
+    "immer": "^10.1.1",
     "pubsub-js": "^1.9.4",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@types/pubsub-js": "^1.8.6",

@@ -4,9 +4,11 @@ import PubSub from "pubsub-js";
 import CanvasManager from "@src/app/CanvasManager.ts";
 import ArchitectureElementIcon from "@src/drawables/ArchitectureElementIcon.ts";
 import BaseDrawable from "@src/drawables/BaseDrawable.ts";
+import ShortcutManager from "@src/app/ShortcutManager.ts";
 
 function initialize() {
   const canvasManager = CanvasManager.getInstance();
+  ShortcutManager.initialize();
 
   const x = 0;
   const y = 100;

@@ -1,9 +1,8 @@
-import PubSub from "pubsub-js";
+import { ReactNode } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faCircleNodes } from "@fortawesome/free-solid-svg-icons";
 
-import "./TopPanel.css";
-import { ReactNode } from "react";
+import ApplicationActions from "@src/app/ApplicationActions.ts";
 
 const MenuButton = ({
   children,
@@ -29,10 +28,7 @@ const AddItem = () => {
     <MenuButton
       title="Add Item"
       shortcutIndicator="1"
-      onClick={() => {
-        console.log("click");
-        PubSub.publish("DRAW");
-      }}
+      onClick={ApplicationActions.addItemMenu.open}
     >
       <FontAwesomeIcon icon={faPlus} />
     </MenuButton>
@@ -44,10 +40,7 @@ const ConnectItem = () => {
     <MenuButton
       title="Connect Items"
       shortcutIndicator="2"
-      onClick={() => {
-        console.log("click");
-        PubSub.publish("DRAW");
-      }}
+      onClick={ApplicationActions.startConnectingItems}
     >
       <FontAwesomeIcon icon={faCircleNodes} />
     </MenuButton>

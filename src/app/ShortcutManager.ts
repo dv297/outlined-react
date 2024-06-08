@@ -1,8 +1,12 @@
+import ApplicationActions from "@src/app/ApplicationActions.ts";
+
 class ShortcutManager {
-  onDigit1KeyDown(callback: () => void) {
+  static initialize() {
     document.addEventListener("keydown", (event) => {
-      if (event.code === "Digit1") {
-        callback();
+      switch (event.code) {
+        case "Digit1": {
+          ApplicationActions.addItemMenu.open();
+        }
       }
     });
   }
