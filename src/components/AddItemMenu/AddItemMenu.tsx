@@ -4,6 +4,7 @@ import MainStore from "@src/stores/MainStore.ts";
 import {
   faMagnifyingGlass,
   faExclamationCircle,
+  faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   Combobox,
@@ -15,25 +16,11 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import { useState } from "react";
+import { useDeferredValue, useMemo, useState } from "react";
 import clsx from "clsx";
 import ApplicationActions from "@src/app/ApplicationActions.ts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-const SampleIcon = () => {
-  return <div />;
-};
-
-const filteredItems = [
-  {
-    id: 1,
-    name: "Text",
-    description: "Add freeform text with basic formatting options.",
-    url: "#",
-    color: "bg-indigo-500",
-    icon: SampleIcon,
-  },
-];
+import supportedIcons from "@src/data/supported_icons.json";
 
 const AddItemMenu = () => {
   const {
@@ -41,6 +28,37 @@ const AddItemMenu = () => {
   } = useStore(MainStore);
 
   const [query, setQuery] = useState("");
+  const deferredQuery = useDeferredValue(query);
+  const isLoading = query !== deferredQuery;
+
+  const filteredItems = useMemo(() => {
+    if (!deferredQuery) {
+      return [];
+    }
+
+    const filteredList = supportedIcons
+      .filter((entry) =>
+        entry.path.toLowerCase().includes(deferredQuery.toLowerCase()),
+      )
+      .slice(0, 20);
+
+    return filteredList.map((entry) => {
+      const entrySegments = entry.path.split("/");
+      const sanitizedName = entrySegments[entrySegments.length - 1]
+        .replace(/[-_]/g, " ")
+        .replace(".svg", "")
+        .replace(/\d/g, "");
+
+      return {
+        id: entry.path,
+        name: sanitizedName,
+        description: "",
+        url: "#",
+        color: "bg-white",
+        icon: <img src={`/${entry.path}`} alt={entry.path} />,
+      };
+    });
+  }, [deferredQuery]);
 
   if (!isOpen) {
     return null;
@@ -120,10 +138,11 @@ const AddItemMenu = () => {
                                   item.color,
                                 )}
                               >
-                                <item.icon
-                                  // className="h-6 w-6 text-white"
-                                  aria-hidden="true"
-                                />
+                                {item.icon}
+                                {/*<item.icon*/}
+                                {/*  // className="h-6 w-6 text-white"*/}
+                                {/*aria-hidden="true"*/}
+                                {/*/>*/}
                               </div>
                               <div className="ml-4 flex-auto">
                                 <p
@@ -150,7 +169,18 @@ const AddItemMenu = () => {
                     </ComboboxOptions>
                   )}
 
-                  {query !== "" && filteredItems.length === 0 && (
+                  {query !== "" && isLoading && filteredItems.length === 0 && (
+                    <div className="px-6 py-14 text-center text-sm sm:px-14">
+                      <FontAwesomeIcon
+                        icon={faSpinner}
+                        className="fa-spin mx-auto h-6 w-6 text-gray-400"
+                      />
+                      <p className="mt-4 font-semibold text-gray-900">
+                        Loading...
+                      </p>
+                    </div>
+                  )}
+                  {query !== "" && !isLoading && filteredItems.length === 0 && (
                     <div className="px-6 py-14 text-center text-sm sm:px-14">
                       <FontAwesomeIcon
                         icon={faExclamationCircle}
