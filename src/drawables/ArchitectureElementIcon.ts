@@ -17,7 +17,7 @@ class ArchitectureElementIcon extends BaseDrawable {
   handleDraw(context: CanvasRenderingContext2D): void {
     const { iconPath, x, y } = this;
     const image = new Image();
-    image.src = window.location + `/icons/${iconPath}`;
+    image.src = window.location + `/${iconPath}`;
     image.onload = () => {
       context.drawImage(image, x, y);
     };

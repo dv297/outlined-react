@@ -1,3 +1,6 @@
+import PubSub from "pubsub-js";
+import MainStore from "@src/stores/MainStore.ts";
+
 let globalCanvasManager: CanvasManager;
 
 class CanvasManager {
@@ -30,6 +33,19 @@ class CanvasManager {
 
     this.__height = canvas.height;
     this.__width = canvas.width;
+
+    PubSub.subscribe("DRAW", (message, data) => {
+      console.log(message, data);
+      this.redraw();
+    });
+  }
+
+  static initialize() {
+    this.getInstance();
+
+    MainStore.subscribe(() => {
+      CanvasManager.getInstance().redraw();
+    });
   }
 
   static getInstance(): CanvasManager {
@@ -38,6 +54,16 @@ class CanvasManager {
     }
 
     return globalCanvasManager;
+  }
+
+  redraw() {
+    this.clear();
+
+    const drawables = MainStore.getState().canvasItems;
+
+    requestAnimationFrame(() => {
+      drawables.forEach((drawable) => drawable.draw());
+    });
   }
 
   clear() {

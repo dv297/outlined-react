@@ -1,11 +1,11 @@
-import ApplicationActions from "@src/app/ApplicationActions.ts";
+import MainStore from "@src/stores/MainStore.ts";
 
 class ShortcutManager {
   static initialize() {
     document.addEventListener("keydown", (event) => {
       switch (event.code) {
         case "Digit1": {
-          ApplicationActions.addItemMenu.open();
+          MainStore.getState().addItemMenu.open();
         }
       }
     });

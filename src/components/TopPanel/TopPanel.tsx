@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faCircleNodes } from "@fortawesome/free-solid-svg-icons";
-
-import ApplicationActions from "@src/app/ApplicationActions.ts";
+import { useStore } from "zustand";
+import MainStore from "@src/stores/MainStore.ts";
 
 const MenuButton = ({
   children,
@@ -24,11 +24,13 @@ const MenuButton = ({
 );
 
 const AddItem = () => {
+  const store = useStore(MainStore);
+
   return (
     <MenuButton
       title="Add Item"
       shortcutIndicator="1"
-      onClick={ApplicationActions.addItemMenu.open}
+      onClick={store.addItemMenu.open}
     >
       <FontAwesomeIcon icon={faPlus} />
     </MenuButton>
@@ -37,11 +39,7 @@ const AddItem = () => {
 
 const ConnectItem = () => {
   return (
-    <MenuButton
-      title="Connect Items"
-      shortcutIndicator="2"
-      onClick={ApplicationActions.startConnectingItems}
-    >
+    <MenuButton title="Connect Items" shortcutIndicator="2" onClick={() => {}}>
       <FontAwesomeIcon icon={faCircleNodes} />
     </MenuButton>
   );

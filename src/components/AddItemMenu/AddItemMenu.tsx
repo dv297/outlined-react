@@ -16,22 +16,31 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import { useDeferredValue, useMemo, useState } from "react";
+import { ReactNode, useDeferredValue, useMemo, useState } from "react";
 import clsx from "clsx";
-import ApplicationActions from "@src/app/ApplicationActions.ts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import supportedIcons from "@src/data/supported_icons.json";
 
+interface AddItemItem {
+  id: string;
+  name: string;
+  description: string;
+  url: string;
+  color: string;
+  icon: ReactNode;
+}
+
 const AddItemMenu = () => {
   const {
-    addItemMenu: { isOpen },
+    addItemMenu: { isOpen, close },
+    addItem,
   } = useStore(MainStore);
 
   const [query, setQuery] = useState("");
   const deferredQuery = useDeferredValue(query);
   const isLoading = query !== deferredQuery;
 
-  const filteredItems = useMemo(() => {
+  const filteredItems = useMemo<AddItemItem[]>(() => {
     if (!deferredQuery) {
       return [];
     }
@@ -66,10 +75,7 @@ const AddItemMenu = () => {
 
   return (
     <Transition show={isOpen} afterLeave={() => setQuery("")} appear>
-      <Dialog
-        className="relative z-10"
-        onClose={ApplicationActions.addItemMenu.close}
-      >
+      <Dialog className="relative z-10" onClose={close}>
         <TransitionChild
           enter="ease-out duration-300"
           enterFrom="opacity-0"
@@ -92,8 +98,15 @@ const AddItemMenu = () => {
           >
             <DialogPanel className="mx-auto max-w-xl transform divide-y divide-gray-100 overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition-all">
               <Combobox
-                onChange={(item) => {
-                  console.log("Item Selected", item);
+                onChange={(item: AddItemItem) => {
+                  addItem({
+                    type: "ArchitectureElementIcon",
+                    x: 100,
+                    y: 100,
+                    meta: {
+                      path: item.id,
+                    },
+                  });
                 }}
               >
                 <div>

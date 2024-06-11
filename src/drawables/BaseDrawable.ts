@@ -1,6 +1,9 @@
 import CanvasManager from "@src/app/CanvasManager.ts";
 
 abstract class BaseDrawable {
+  abstract x: number;
+  abstract y: number;
+
   abstract handleDraw(
     context: CanvasRenderingContext2D,
     canvas: HTMLCanvasElement,
