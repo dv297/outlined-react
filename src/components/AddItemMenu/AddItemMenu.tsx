@@ -31,10 +31,7 @@ interface AddItemItem {
 }
 
 const AddItemMenu = () => {
-  const {
-    addItemMenu: { isOpen, close },
-    addItem,
-  } = useStore(MainStore);
+  const store = useStore(MainStore);
 
   const [query, setQuery] = useState("");
   const deferredQuery = useDeferredValue(query);
@@ -69,12 +66,16 @@ const AddItemMenu = () => {
     });
   }, [deferredQuery]);
 
-  if (!isOpen) {
+  if (!store.addItemMenu.isOpen) {
     return null;
   }
 
   return (
-    <Transition show={isOpen} afterLeave={() => setQuery("")} appear>
+    <Transition
+      show={store.addItemMenu.isOpen}
+      afterLeave={() => setQuery("")}
+      appear
+    >
       <Dialog className="relative z-10" onClose={close}>
         <TransitionChild
           enter="ease-out duration-300"
@@ -98,15 +99,17 @@ const AddItemMenu = () => {
           >
             <DialogPanel className="mx-auto max-w-xl transform divide-y divide-gray-100 overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition-all">
               <Combobox
-                onChange={(item: AddItemItem) => {
-                  addItem({
-                    type: "ArchitectureElementIcon",
-                    x: 100,
-                    y: 100,
-                    meta: {
-                      path: item.id,
-                    },
-                  });
+                onChange={(item: AddItemItem | null) => {
+                  if (item) {
+                    store.addDrawable({
+                      type: "ArchitectureElementIcon",
+                      x: 100,
+                      y: 100,
+                      meta: {
+                        path: item.id,
+                      },
+                    });
+                  }
                 }}
               >
                 <div>

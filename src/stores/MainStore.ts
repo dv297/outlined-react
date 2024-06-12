@@ -3,14 +3,8 @@ import { devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import BaseDrawable from "@src/drawables/BaseDrawable.ts";
 import CanvasManager from "@src/app/CanvasManager.ts";
-import ArchitectureElementIcon from "@src/drawables/ArchitectureElementIcon.ts";
-
-interface DrawablePojo {
-  x: number;
-  y: number;
-  type: "ArchitectureElementIcon" | "Shape";
-  meta: Record<string, string>;
-}
+import { DrawableInput } from "@src/drawables/DrawableInput.ts";
+import DrawableFactory from "@src/drawables/DrawableFactory.ts";
 
 interface MainStoreState {
   addItemMenu: {
@@ -19,7 +13,7 @@ interface MainStoreState {
     close: () => void;
   };
   canvasItems: BaseDrawable[];
-  addItem: (item: DrawablePojo) => void;
+  addDrawable: (item: DrawableInput) => void;
 }
 
 const MainStore = create<MainStoreState>()(
@@ -39,20 +33,9 @@ const MainStore = create<MainStoreState>()(
         },
       },
       canvasItems: [],
-      addItem: (item: DrawablePojo) => {
+      addDrawable: (item: DrawableInput) => {
         setState((draft) => {
-          let itemToAdd;
-          if (item.type === "ArchitectureElementIcon") {
-            itemToAdd = new ArchitectureElementIcon(
-              item.meta["path"],
-              item.x,
-              item.y,
-            );
-          }
-
-          if (!itemToAdd) {
-            return;
-          }
+          const itemToAdd = DrawableFactory.build(item);
 
           draft.canvasItems.push(itemToAdd);
           draft.addItemMenu.isOpen = false;
