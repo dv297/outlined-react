@@ -14,5 +14,7 @@ module.exports = {
       "warn",
       { allowConstantExport: true },
     ],
+    "no-implicit-globals": ["error"],
+    "no-undef": ["error"],
   },
 };

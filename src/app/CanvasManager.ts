@@ -1,7 +1,14 @@
 import PubSub from "pubsub-js";
 import MainStore from "@src/stores/MainStore.ts";
+import React from "react";
+import BaseDrawable from "@src/drawables/BaseDrawable.ts";
 
 let globalCanvasManager: CanvasManager;
+
+// window.onbeforeunload = confirmExit;
+// function confirmExit() {
+//   return "You have attempted to leave this page. Are you sure?";
+// }
 
 class CanvasManager {
   __canvas: HTMLCanvasElement;
@@ -11,6 +18,8 @@ class CanvasManager {
   __height: number;
 
   __width: number;
+
+  __activeItem: BaseDrawable | null;
 
   constructor(elementSelector: string) {
     const canvas = document.querySelector<HTMLCanvasElement>(elementSelector);
@@ -33,6 +42,8 @@ class CanvasManager {
 
     this.__height = canvas.height;
     this.__width = canvas.width;
+
+    this.__activeItem = null;
 
     PubSub.subscribe("DRAW", (message, data) => {
       console.log(message, data);
@@ -58,7 +69,6 @@ class CanvasManager {
 
   redraw() {
     this.clear();
-
     const drawables = MainStore.getState().canvasItems;
 
     requestAnimationFrame(() => {
@@ -68,6 +78,44 @@ class CanvasManager {
 
   clear() {
     this.__context.clearRect(0, 0, this.__width, this.__height);
+  }
+
+  handleMouseDown(event: React.MouseEvent) {
+    const mouseX = event.clientX;
+    const mouseY = event.clientY;
+
+    const touchedItem = MainStore.getState().canvasItems.find((item) => {
+      return (
+        mouseX >= item.x &&
+        mouseX <= item.x + item.width &&
+        mouseY >= item.y &&
+        mouseY <= item.y + item.height
+      );
+    });
+
+    if (!touchedItem) {
+      return;
+    }
+
+    this.__activeItem = touchedItem;
+  }
+
+  handleMouseMove(event: React.MouseEvent) {
+    if (!this.__activeItem) {
+      return;
+    }
+
+    const mouseX = event.pageX;
+    const mouseY = event.pageY;
+
+    MainStore.getState().moveDrawable(this.__activeItem, {
+      x: mouseX,
+      y: mouseY,
+    });
+  }
+
+  handleMouseUp() {
+    this.__activeItem = null;
   }
 }
 

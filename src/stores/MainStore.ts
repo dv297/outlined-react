@@ -5,6 +5,7 @@ import BaseDrawable from "@src/drawables/BaseDrawable.ts";
 import CanvasManager from "@src/app/CanvasManager.ts";
 import { DrawableInput } from "@src/drawables/DrawableInput.ts";
 import DrawableFactory from "@src/drawables/DrawableFactory.ts";
+import { Coordinate } from "@src/drawables/Coordinate.ts";
 
 interface MainStoreState {
   addItemMenu: {
@@ -14,6 +15,7 @@ interface MainStoreState {
   };
   canvasItems: BaseDrawable[];
   addDrawable: (item: DrawableInput) => void;
+  moveDrawable: (item: BaseDrawable, coordinate: Coordinate) => void;
 }
 
 const MainStore = create<MainStoreState>()(
@@ -39,6 +41,21 @@ const MainStore = create<MainStoreState>()(
 
           draft.canvasItems.push(itemToAdd);
           draft.addItemMenu.isOpen = false;
+          CanvasManager.getInstance().redraw();
+        });
+      },
+      moveDrawable: (item: BaseDrawable, coordinate: Coordinate) => {
+        setState((draft) => {
+          const itemToModify = draft.canvasItems.find(
+            (potentialItem) => potentialItem.id === item.id,
+          );
+
+          if (!itemToModify) {
+            return;
+          }
+
+          itemToModify.x = coordinate.x;
+          itemToModify.y = coordinate.y;
           CanvasManager.getInstance().redraw();
         });
       },

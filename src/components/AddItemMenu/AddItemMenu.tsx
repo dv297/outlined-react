@@ -76,7 +76,7 @@ const AddItemMenu = () => {
       afterLeave={() => setQuery("")}
       appear
     >
-      <Dialog className="relative z-10" onClose={close}>
+      <Dialog className="relative z-10" onClose={store.addItemMenu.close}>
         <TransitionChild
           enter="ease-out duration-300"
           enterFrom="opacity-0"

@@ -6,7 +6,6 @@
   position: absolute;
   top: 0;
   left: 0;
-  @apply bg-gray-100;
   /* Prevents blur issues when using the canvas draw API's */
   image-rendering: pixelated;
 }

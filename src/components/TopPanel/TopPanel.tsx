@@ -38,8 +38,22 @@ const AddItem = () => {
 };
 
 const ConnectItem = () => {
+  const store = useStore(MainStore);
+
   return (
-    <MenuButton title="Connect Items" shortcutIndicator="2" onClick={() => {}}>
+    <MenuButton
+      title="Connect Items"
+      shortcutIndicator="2"
+      onClick={() => {
+        console.log("hittt");
+        if (store.canvasItems[0]) {
+          store.moveDrawable(store.canvasItems[0], {
+            x: store.canvasItems[0].x + 100,
+            y: store.canvasItems[0].y + 100,
+          });
+        }
+      }}
+    >
       <FontAwesomeIcon icon={faCircleNodes} />
     </MenuButton>
   );
