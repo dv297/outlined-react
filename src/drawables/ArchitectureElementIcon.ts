@@ -11,6 +11,10 @@ class ArchitectureElementIcon extends BaseDrawable {
 
   width: number;
 
+  image: HTMLImageElement;
+
+  hasImageResolved: boolean;
+
   constructor(iconPath: string, x: number, y: number) {
     super();
     this.iconPath = iconPath;
@@ -18,18 +22,31 @@ class ArchitectureElementIcon extends BaseDrawable {
     this.y = y;
     this.width = 0;
     this.height = 0;
+
+    this.hasImageResolved = false;
+
+    const image = new Image();
+    image.src = window.location + `/${iconPath}`;
+
+    image.onload = (onLoadResult) => {
+      const resolvedImage = onLoadResult.target as HTMLImageElement;
+      this.width = resolvedImage.width;
+      this.height = resolvedImage.height;
+      this.hasImageResolved = true;
+
+      this.draw();
+    };
+
+    this.image = image;
   }
 
   handleDraw(context: CanvasRenderingContext2D): void {
-    const { iconPath, x, y } = this;
-    const image = new Image();
-    image.src = window.location + `/${iconPath}`;
-    image.onload = (onLoadResult) => {
-      const image = onLoadResult.target as HTMLImageElement;
-      this.width = image.width;
-      this.height = image.height;
-      context.drawImage(image, x, y, this.width, this.height);
-    };
+    const { x, y } = this;
+    if (!this.hasImageResolved) {
+      return;
+    }
+
+    context.drawImage(this.image, x, y, this.width, this.height);
   }
 }
 

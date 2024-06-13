@@ -21,6 +21,10 @@ class CanvasManager {
 
   __activeItem: BaseDrawable | null;
 
+  __activeItemOffsetX: number;
+
+  __activeItemOffsetY: number;
+
   constructor(elementSelector: string) {
     const canvas = document.querySelector<HTMLCanvasElement>(elementSelector);
 
@@ -44,6 +48,8 @@ class CanvasManager {
     this.__width = canvas.width;
 
     this.__activeItem = null;
+    this.__activeItemOffsetX = 0;
+    this.__activeItemOffsetY = 0;
 
     PubSub.subscribe("DRAW", (message, data) => {
       console.log(message, data);
@@ -98,6 +104,8 @@ class CanvasManager {
     }
 
     this.__activeItem = touchedItem;
+    this.__activeItemOffsetX = mouseX - this.__activeItem.x;
+    this.__activeItemOffsetY = mouseY - this.__activeItem.y;
   }
 
   handleMouseMove(event: React.MouseEvent) {
@@ -109,8 +117,8 @@ class CanvasManager {
     const mouseY = event.pageY;
 
     MainStore.getState().moveDrawable(this.__activeItem, {
-      x: mouseX,
-      y: mouseY,
+      x: mouseX - this.__activeItemOffsetX,
+      y: mouseY - this.__activeItemOffsetY,
     });
   }
 
