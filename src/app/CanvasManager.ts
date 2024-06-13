@@ -11,19 +11,19 @@ let globalCanvasManager: CanvasManager;
 // }
 
 class CanvasManager {
-  __canvas: HTMLCanvasElement;
+  canvas: HTMLCanvasElement;
 
-  __context: CanvasRenderingContext2D;
+  context: CanvasRenderingContext2D;
 
-  __height: number;
+  height: number;
 
-  __width: number;
+  width: number;
 
-  __activeItem: BaseDrawable | null;
+  activeItem: BaseDrawable | null;
 
-  __activeItemOffsetX: number;
+  activeItemOffsetX: number;
 
-  __activeItemOffsetY: number;
+  activeItemOffsetY: number;
 
   constructor(elementSelector: string) {
     const canvas = document.querySelector<HTMLCanvasElement>(elementSelector);
@@ -38,18 +38,18 @@ class CanvasManager {
       throw new Error("Could not get 2D context");
     }
 
-    this.__canvas = canvas;
-    this.__context = context;
+    this.canvas = canvas;
+    this.context = context;
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    this.__height = canvas.height;
-    this.__width = canvas.width;
+    this.height = canvas.height;
+    this.width = canvas.width;
 
-    this.__activeItem = null;
-    this.__activeItemOffsetX = 0;
-    this.__activeItemOffsetY = 0;
+    this.activeItem = null;
+    this.activeItemOffsetX = 0;
+    this.activeItemOffsetY = 0;
 
     PubSub.subscribe("DRAW", (message, data) => {
       console.log(message, data);
@@ -83,7 +83,7 @@ class CanvasManager {
   }
 
   clear() {
-    this.__context.clearRect(0, 0, this.__width, this.__height);
+    this.context.clearRect(0, 0, this.width, this.height);
   }
 
   handleMouseDown(event: React.MouseEvent) {
@@ -103,27 +103,29 @@ class CanvasManager {
       return;
     }
 
-    this.__activeItem = touchedItem;
-    this.__activeItemOffsetX = mouseX - this.__activeItem.x;
-    this.__activeItemOffsetY = mouseY - this.__activeItem.y;
+    this.activeItem = touchedItem;
+    this.activeItemOffsetX = mouseX - this.activeItem.x;
+    this.activeItemOffsetY = mouseY - this.activeItem.y;
   }
 
   handleMouseMove(event: React.MouseEvent) {
-    if (!this.__activeItem) {
+    if (!this.activeItem) {
       return;
     }
 
     const mouseX = event.pageX;
     const mouseY = event.pageY;
 
-    MainStore.getState().moveDrawable(this.__activeItem, {
-      x: mouseX - this.__activeItemOffsetX,
-      y: mouseY - this.__activeItemOffsetY,
+    MainStore.getState().moveDrawable(this.activeItem, {
+      x: mouseX - this.activeItemOffsetX,
+      y: mouseY - this.activeItemOffsetY,
     });
   }
 
   handleMouseUp() {
-    this.__activeItem = null;
+    this.activeItem = null;
+    this.activeItemOffsetX = 0;
+    this.activeItemOffsetY = 0;
   }
 }
 

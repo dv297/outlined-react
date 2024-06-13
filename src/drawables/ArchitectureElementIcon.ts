@@ -41,12 +41,19 @@ class ArchitectureElementIcon extends BaseDrawable {
   }
 
   handleDraw(context: CanvasRenderingContext2D): void {
-    const { x, y } = this;
     if (!this.hasImageResolved) {
       return;
     }
 
-    context.drawImage(this.image, x, y, this.width, this.height);
+    context.drawImage(this.image, this.x, this.y, this.width, this.height);
+  }
+
+  handleLabel(context: CanvasRenderingContext2D): void {
+    if (!this.hasImageResolved) {
+      return;
+    }
+
+    context.fillText(this.labelText, this.x, this.y + this.height + 12);
   }
 }
 
