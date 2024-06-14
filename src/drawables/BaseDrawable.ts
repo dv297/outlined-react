@@ -10,11 +10,14 @@ abstract class BaseDrawable {
   abstract width: number;
   abstract height: number;
 
-  labelText: string;
+  text: string;
+
+  isEditing: boolean;
 
   protected constructor() {
     this.id = uuid();
-    this.labelText = "Drawable";
+    this.text = "Drawable";
+    this.isEditing = false;
   }
 
   abstract handleDraw(
@@ -23,7 +26,13 @@ abstract class BaseDrawable {
     canvasManager: CanvasManager,
   ): void;
 
-  abstract handleLabel(
+  abstract handleTextRendering(
+    context: CanvasRenderingContext2D,
+    canvas: HTMLCanvasElement,
+    canvasManager: CanvasManager,
+  ): void;
+
+  abstract handleEditInputRendering(
     context: CanvasRenderingContext2D,
     canvas: HTMLCanvasElement,
     canvasManager: CanvasManager,
@@ -33,11 +42,20 @@ abstract class BaseDrawable {
     const canvasManager = CanvasManager.getInstance();
 
     this.handleDraw(canvasManager.context, canvasManager.canvas, canvasManager);
-    this.handleLabel(
-      canvasManager.context,
-      canvasManager.canvas,
-      canvasManager,
-    );
+
+    if (this.isEditing) {
+      this.handleEditInputRendering(
+        canvasManager.context,
+        canvasManager.canvas,
+        canvasManager,
+      );
+    } else {
+      this.handleTextRendering(
+        canvasManager.context,
+        canvasManager.canvas,
+        canvasManager,
+      );
+    }
   }
 }
 

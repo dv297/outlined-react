@@ -13,6 +13,12 @@ interface MainStoreState {
     open: () => void;
     close: () => void;
   };
+  editItemLabelMenu: {
+    isOpen: boolean;
+    activeItem: BaseDrawable | null;
+    open: (drawable: BaseDrawable) => void;
+    close: () => void;
+  };
   canvasItems: BaseDrawable[];
   addDrawable: (item: DrawableInput) => void;
   moveDrawable: (item: BaseDrawable, coordinate: Coordinate) => void;
@@ -31,6 +37,29 @@ const MainStore = create<MainStoreState>()(
         close: () => {
           setState((draft) => {
             draft.addItemMenu.isOpen = false;
+          });
+        },
+      },
+      editItemLabelMenu: {
+        isOpen: false,
+        activeItem: null,
+        open: (drawable) => {
+          setState((draft) => {
+            draft.editItemLabelMenu.isOpen = true;
+            draft.editItemLabelMenu.activeItem = drawable;
+
+            const draftDrawable = draft.canvasItems.find(
+              (item) => item.id === drawable.id,
+            );
+            if (draftDrawable) {
+              draftDrawable.isEditing = true;
+            }
+          });
+        },
+        close: () => {
+          setState((draft) => {
+            draft.editItemLabelMenu.isOpen = false;
+            draft.editItemLabelMenu.activeItem = null;
           });
         },
       },

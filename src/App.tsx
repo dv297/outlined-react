@@ -3,6 +3,7 @@ import initialize from "@src/main.ts";
 import TopPanel from "@src/components/TopPanel/TopPanel.tsx";
 import AddItemMenu from "@src/components/AddItemMenu/AddItemMenu.tsx";
 import CanvasManager from "@src/app/CanvasManager.ts";
+import EditItemLabelMenu from "@src/components/EditItemLabelMenu/EditItemLabelMenu.tsx";
 
 function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -28,10 +29,14 @@ function App() {
           CanvasManager.getInstance().handleMouseMove(event)
         }
         onMouseUp={() => CanvasManager.getInstance().handleMouseUp()}
+        onDoubleClick={(event) =>
+          CanvasManager.getInstance().handleMouseDoubleClick(event)
+        }
       />
       <div className="z-10">
         <TopPanel />
         <AddItemMenu />
+        <EditItemLabelMenu />
       </div>
     </div>
   );

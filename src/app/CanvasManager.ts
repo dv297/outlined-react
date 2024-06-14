@@ -75,6 +75,8 @@ class CanvasManager {
 
   redraw() {
     this.clear();
+    this.context.font =
+      '0.75rem ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
     const drawables = MainStore.getState().canvasItems;
 
     requestAnimationFrame(() => {
@@ -86,18 +88,22 @@ class CanvasManager {
     this.context.clearRect(0, 0, this.width, this.height);
   }
 
+  findItemWithCoordinateCollision(x: number, y: number) {
+    return MainStore.getState().canvasItems.find((item) => {
+      return (
+        x >= item.x &&
+        x <= item.x + item.width &&
+        y >= item.y &&
+        y <= item.y + item.height
+      );
+    });
+  }
+
   handleMouseDown(event: React.MouseEvent) {
     const mouseX = event.clientX;
     const mouseY = event.clientY;
 
-    const touchedItem = MainStore.getState().canvasItems.find((item) => {
-      return (
-        mouseX >= item.x &&
-        mouseX <= item.x + item.width &&
-        mouseY >= item.y &&
-        mouseY <= item.y + item.height
-      );
-    });
+    const touchedItem = this.findItemWithCoordinateCollision(mouseX, mouseY);
 
     if (!touchedItem) {
       return;
@@ -126,6 +132,19 @@ class CanvasManager {
     this.activeItem = null;
     this.activeItemOffsetX = 0;
     this.activeItemOffsetY = 0;
+  }
+
+  handleMouseDoubleClick(event: React.MouseEvent) {
+    const mouseX = event.clientX;
+    const mouseY = event.clientY;
+
+    const touchedItem = this.findItemWithCoordinateCollision(mouseX, mouseY);
+
+    if (!touchedItem) {
+      return;
+    }
+
+    MainStore.getState().editItemLabelMenu.open(touchedItem);
   }
 }
 
