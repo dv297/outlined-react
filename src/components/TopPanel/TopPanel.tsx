@@ -45,7 +45,6 @@ const ConnectItem = () => {
       title="Connect Items"
       shortcutIndicator="2"
       onClick={() => {
-        console.log("hittt");
         if (store.canvasItems[0]) {
           store.moveDrawable(store.canvasItems[0], {
             x: store.canvasItems[0].x + 100,

@@ -51,8 +51,7 @@ class CanvasManager {
     this.activeItemOffsetX = 0;
     this.activeItemOffsetY = 0;
 
-    PubSub.subscribe("DRAW", (message, data) => {
-      console.log(message, data);
+    PubSub.subscribe("DRAW", () => {
       this.redraw();
     });
   }
@@ -144,7 +143,7 @@ class CanvasManager {
       return;
     }
 
-    MainStore.getState().editItemLabelMenu.open(touchedItem);
+    MainStore.getState().editItemMenu.open(touchedItem);
   }
 }
 

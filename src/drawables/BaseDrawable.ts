@@ -1,7 +1,10 @@
 import { v4 as uuid } from "uuid";
 import CanvasManager from "@src/app/CanvasManager.ts";
+import { immerable } from "immer";
 
 abstract class BaseDrawable {
+  [immerable] = true;
+
   id: string;
 
   abstract x: number;
@@ -43,19 +46,11 @@ abstract class BaseDrawable {
 
     this.handleDraw(canvasManager.context, canvasManager.canvas, canvasManager);
 
-    if (this.isEditing) {
-      this.handleEditInputRendering(
-        canvasManager.context,
-        canvasManager.canvas,
-        canvasManager,
-      );
-    } else {
-      this.handleTextRendering(
-        canvasManager.context,
-        canvasManager.canvas,
-        canvasManager,
-      );
-    }
+    this.handleTextRendering(
+      canvasManager.context,
+      canvasManager.canvas,
+      canvasManager,
+    );
   }
 }
 

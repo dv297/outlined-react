@@ -13,11 +13,12 @@ interface MainStoreState {
     open: () => void;
     close: () => void;
   };
-  editItemLabelMenu: {
+  editItemMenu: {
     isOpen: boolean;
     activeItem: BaseDrawable | null;
     open: (drawable: BaseDrawable) => void;
     close: () => void;
+    editItemText: (item: BaseDrawable, text: string) => void;
   };
   canvasItems: BaseDrawable[];
   addDrawable: (item: DrawableInput) => void;
@@ -40,13 +41,13 @@ const MainStore = create<MainStoreState>()(
           });
         },
       },
-      editItemLabelMenu: {
+      editItemMenu: {
         isOpen: false,
         activeItem: null,
         open: (drawable) => {
           setState((draft) => {
-            draft.editItemLabelMenu.isOpen = true;
-            draft.editItemLabelMenu.activeItem = drawable;
+            draft.editItemMenu.isOpen = true;
+            draft.editItemMenu.activeItem = drawable;
 
             const draftDrawable = draft.canvasItems.find(
               (item) => item.id === drawable.id,
@@ -58,8 +59,19 @@ const MainStore = create<MainStoreState>()(
         },
         close: () => {
           setState((draft) => {
-            draft.editItemLabelMenu.isOpen = false;
-            draft.editItemLabelMenu.activeItem = null;
+            draft.editItemMenu.isOpen = false;
+            draft.editItemMenu.activeItem = null;
+          });
+        },
+        editItemText: (item, text) => {
+          setState((draft) => {
+            const draftItem = draft.canvasItems.find(
+              (potentialItem) => potentialItem.id === item.id,
+            );
+
+            if (draftItem) {
+              draftItem.text = text;
+            }
           });
         },
       },
@@ -70,7 +82,6 @@ const MainStore = create<MainStoreState>()(
 
           draft.canvasItems.push(itemToAdd);
           draft.addItemMenu.isOpen = false;
-          CanvasManager.getInstance().redraw();
         });
       },
       moveDrawable: (item: BaseDrawable, coordinate: Coordinate) => {
@@ -85,11 +96,14 @@ const MainStore = create<MainStoreState>()(
 
           itemToModify.x = coordinate.x;
           itemToModify.y = coordinate.y;
-          CanvasManager.getInstance().redraw();
         });
       },
     })),
   ),
 );
+
+MainStore.subscribe(() => {
+  CanvasManager.getInstance().redraw();
+});
 
 export default MainStore;
